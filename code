@@ -2,12 +2,8 @@
 
 using namespace std;
 
-int n;
-int vec[1001];
-unsigned long long max1, i1;
-unsigned long long max2, i2;
-unsigned long long s;
-bool ok = false;
+unsigned long long sum, sump, summax;
+unsigned long long n, vec[1001];
 
 int main()
 {
@@ -17,53 +13,31 @@ int main()
     cin >> n;
     
     for(int i = 1; i <= n; i ++){
-        cin >> vec[i];
+        cin >> vec[i]; 
+        sum += vec[i];
     }
     
-    for(int i = 1; i < n; i ++){
-        int p = vec[i] * vec[i + 1];
-        if(p >= max1){
-            max2 = max1;
-            i2 = i1;
-            max1 = p;
-            i1 = i;
-        }
-        else if(p >= max2){
-            max2 = p;
-            i2 = i;
+    summax = sum;
+    
+    for(int i = 1; i < n - 1; i ++){
+        sump = sum - vec[i] - vec[i + 1] - vec[i + 2] + vec[i] * vec[i + 1] * vec[i + 2];
+        
+        if(summax < sump){
+            summax = sump;
         }
     }
     
-    for(int i = 1; i < n; i ++){
-        int p = vec[i] * vec[i + 1] * vec[i + 2];
-        if(p >= max1 + max2){
-            max1 = vec[i] * vec[i + 1] * vec[i + 2] / 2;
-            max2 = vec[i] * vec[i + 1] * vec[i + 2] / 2;
-            i1 = i;
-            i2 = i + 2;
-            ok = true;
+    for(int i = 1; i < n - 2; i ++){
+        for(int j = i + 2; j < n; j ++){
+            sump = sum - vec[i] - vec[i + 1] - vec[j] - vec[j + 1] + vec[i] * vec[i + 1] + vec[j] * vec[j + 1];
+            
+            if(summax < sump){
+                summax = sump;
+            }
         }
     }
     
-    if(ok){
-        vec[i1] = 0;
-        vec[i1 + 1] = 0;
-        vec[i2] = 0; 
-    }
-    else{
-        vec[i1] = 0;
-        vec[i1 + 1] = 0;
-        vec[i2] = 0;
-        vec[i2 + 1] = 0;
-    }
+    cout << summax;
 
-    s += max1 + max2;
-    
-    for(int i = 1; i <= n; i ++){
-        s += vec[i];
-    }
-    
-    cout << s;
-    
     return 0;
 }
